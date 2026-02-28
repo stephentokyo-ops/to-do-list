@@ -1,0 +1,24 @@
+.container {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 32px;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .title {
+    font-size: 26px;
+    margin-bottom: 24px;
+  }
+}
