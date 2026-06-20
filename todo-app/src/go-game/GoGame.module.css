@@ -1,0 +1,794 @@
+/* ──────────────────────────────────────────────
+   Root
+────────────────────────────────────────────── */
+.root {
+  min-height: 100vh;
+  background: #f5f0e8;
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Meiryo', sans-serif;
+  color: #2a1f0e;
+}
+
+/* ──────────────────────────────────────────────
+   Home Screen
+────────────────────────────────────────────── */
+.home {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px 60px;
+}
+
+.homeHero {
+  text-align: center;
+  padding: 40px 20px 32px;
+}
+
+.homeStones {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stoneBlack {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #777, #111);
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.stoneWhite {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #fff, #ccc);
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+  border: 1px solid #bbb;
+}
+
+.homeTitle {
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #1a0f00;
+  margin: 0 0 10px;
+  letter-spacing: 0.05em;
+}
+
+.homeSubtitle {
+  font-size: 1rem;
+  color: #6b5230;
+  margin: 0;
+}
+
+.homeCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.homeCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.15s, box-shadow 0.15s;
+  background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.homeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cardLesson {
+  border-color: #c8a855;
+}
+
+.cardPlay {
+  border-color: #4a8c4a;
+}
+
+.cardEmoji {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.cardContent h2 {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.cardContent p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #5a4a30;
+  line-height: 1.5;
+}
+
+.cardArrow {
+  font-size: 1.4rem;
+  color: #9a8050;
+}
+
+.homeInfo {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.infoBadge {
+  background: #e8d9b0;
+  color: #5a4010;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ──────────────────────────────────────────────
+   Common
+────────────────────────────────────────────── */
+.backBtn {
+  background: none;
+  border: 1px solid #c0a870;
+  color: #5a4010;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.backBtn:hover {
+  background: #e8d9b0;
+}
+
+.blackStoneSmall,
+.stoneBlackTiny {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #777, #111);
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.whiteStoneSmall,
+.stoneWhiteTiny {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #fff, #ccc);
+  border: 1px solid #aaa;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+/* ──────────────────────────────────────────────
+   Lesson Mode
+────────────────────────────────────────────── */
+.lessonLayout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.lessonSidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #1a1200;
+  color: #e0c878;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lessonList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lessonItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: #b89848;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.88rem;
+  transition: background 0.15s;
+  position: relative;
+}
+
+.lessonItem:hover {
+  background: rgba(200, 168, 80, 0.15);
+}
+
+.lessonItemActive {
+  background: rgba(200, 168, 80, 0.25) !important;
+  color: #f0d878 !important;
+  font-weight: 700;
+}
+
+.lessonItemDone {
+  color: #70904a !important;
+}
+
+.lessonItemEmoji {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.lessonItemTitle {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.doneCheck {
+  color: #70e050;
+  font-weight: bold;
+}
+
+.lessonMain {
+  flex: 1;
+  padding: 28px 32px;
+  overflow-y: auto;
+}
+
+.lessonHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.lessonEmoji {
+  font-size: 2.4rem;
+}
+
+.lessonTitle {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin: 0 0 4px;
+  color: #1a0f00;
+}
+
+.lessonTagline {
+  margin: 0;
+  color: #7a6040;
+  font-size: 0.95rem;
+}
+
+.stepProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.stepDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d0b880;
+  transition: background 0.2s;
+}
+
+.stepDone {
+  background: #70c040;
+}
+
+.stepCurrent {
+  background: #c88820;
+  transform: scale(1.3);
+}
+
+.stepLabel {
+  font-size: 0.85rem;
+  color: #7a6040;
+  margin-left: 8px;
+}
+
+.lessonContent {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.instructionPanel {
+  flex: 1;
+  min-width: 280px;
+}
+
+.stepTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a0f00;
+  margin: 0 0 12px;
+}
+
+.stepDescription {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #3a2a10;
+}
+
+.stepDescription p {
+  margin: 0 0 8px;
+}
+
+.stepDescription strong {
+  color: #803000;
+  font-weight: 700;
+}
+
+.feedbackBox {
+  background: #fff8e0;
+  border: 1px solid #d0a820;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  color: #6a4800;
+  margin-top: 16px;
+}
+
+.successBox {
+  background: #f0ffe0;
+  border: 2px solid #60c030;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-top: 20px;
+}
+
+.successIcon {
+  font-size: 1.5rem;
+}
+
+.successBox p {
+  margin: 8px 0 16px;
+  color: #2a5010;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.nextBtn {
+  background: #c88820;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.nextBtn:hover {
+  background: #a87010;
+  transform: translateY(-1px);
+}
+
+.boardArea {
+  flex-shrink: 0;
+}
+
+.turnIndicator {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #5a4010;
+  margin-top: 8px;
+}
+
+/* ──────────────────────────────────────────────
+   Free Play Mode
+────────────────────────────────────────────── */
+.freeplayLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.freeplayTopBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  background: #1a1200;
+  color: #e0c878;
+  flex-wrap: wrap;
+}
+
+.freeplayTitle {
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #f0d878;
+}
+
+.scoreRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.scoreBlack,
+.scoreWhite {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.scoreSep {
+  color: #5a4a20;
+}
+
+.freeplayBody {
+  display: flex;
+  flex: 1;
+  gap: 0;
+}
+
+.freeplayBoardCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px;
+  background: #f5f0e8;
+}
+
+.freeplayControls {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.turnBadge {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #c0a860;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #3a2a10;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.passBtn {
+  background: white;
+  border: 1px solid #a08040;
+  color: #604010;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.passBtn:hover {
+  background: #f0e8d0;
+}
+
+.thinkingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6a5030;
+  font-size: 0.95rem;
+}
+
+.thinkingDots {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #c0a040;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Result panel */
+.resultPanel {
+  background: white;
+  border: 2px solid #c8a840;
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 20px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.resultTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #1a0f00;
+  margin: 0 0 20px;
+}
+
+.resultScores {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.resultScore {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #faf6ec;
+  border-radius: 12px;
+  padding: 14px 18px;
+  flex: 1;
+}
+
+.resultStoneBlack {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #777, #111);
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+}
+
+.resultStoneWhite {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #fff, #ccc);
+  border: 1px solid #aaa;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.resultPlayerName {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1a0f00;
+}
+
+.resultScoreDetail {
+  font-size: 0.82rem;
+  color: #5a4020;
+  margin-top: 3px;
+}
+
+.resultWinner {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #802000;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #fff8e0;
+  border-radius: 10px;
+}
+
+.restartBtn {
+  background: #c88820;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.restartBtn:hover {
+  background: #a87010;
+}
+
+/* Commentary column */
+.commentaryCol {
+  width: 320px;
+  flex-shrink: 0;
+  background: white;
+  border-left: 1px solid #e0d0b0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+}
+
+.commentaryTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2a1f0e;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.commentaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.commentaryItem {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.commentaryIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.commentaryItem p {
+  margin: 0;
+  color: #2a1f0e;
+}
+
+.commentary_good {
+  background: #f0fff0;
+  border: 1px solid #90d060;
+}
+
+.commentary_warning {
+  background: #fff8e0;
+  border: 1px solid #d0b020;
+}
+
+.commentary_tip {
+  background: #f0f8ff;
+  border: 1px solid #80b0e0;
+}
+
+.commentary_info {
+  background: #faf8f0;
+  border: 1px solid #d8c890;
+}
+
+.gameInfoPanel {
+  background: #faf6ec;
+  border: 1px solid #e0d0a0;
+  border-radius: 10px;
+  padding: 14px;
+  flex-shrink: 0;
+}
+
+.gameInfoPanel h4 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: #3a2a10;
+}
+
+.gameInfoRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #5a4020;
+  padding: 4px 0;
+  border-bottom: 1px dotted #e0d0a0;
+}
+
+.gameInfoRow:last-child {
+  border-bottom: none;
+}
+
+.rulesQuickRef {
+  background: #f0ece0;
+  border: 1px solid #d0c090;
+  border-radius: 10px;
+  padding: 14px;
+  flex-shrink: 0;
+}
+
+.rulesQuickRef h4 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: #3a2a10;
+}
+
+.rulesQuickRef ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.83rem;
+  color: #5a4020;
+  line-height: 1.8;
+}
+
+/* ──────────────────────────────────────────────
+   Responsive
+────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .lessonLayout {
+    flex-direction: column;
+  }
+
+  .lessonSidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 12px;
+  }
+
+  .lessonList {
+    flex-direction: row;
+  }
+
+  .lessonItem {
+    flex-shrink: 0;
+  }
+
+  .lessonContent {
+    flex-direction: column;
+  }
+
+  .boardArea {
+    order: -1;
+  }
+
+  .freeplayBody {
+    flex-direction: column;
+  }
+
+  .commentaryCol {
+    width: 100%;
+    max-height: 300px;
+    border-left: none;
+    border-top: 1px solid #e0d0b0;
+  }
+}
+
+@media (max-width: 600px) {
+  .lessonMain {
+    padding: 16px;
+  }
+
+  .homeTitle {
+    font-size: 2rem;
+  }
+
+  .freeplayTopBar {
+    padding: 10px 14px;
+  }
+}

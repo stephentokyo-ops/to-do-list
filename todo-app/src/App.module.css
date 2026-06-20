@@ -1,3 +1,34 @@
+/* Navigation */
+.nav {
+  display: flex;
+  background: #1a1200;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+.navBtn {
+  background: none;
+  border: 1px solid #504020;
+  color: #b89848;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.15s;
+}
+
+.navBtn:hover {
+  background: rgba(200, 168, 80, 0.15);
+  color: #e0c878;
+}
+
+.navBtnActive {
+  background: #c88820 !important;
+  color: white !important;
+  border-color: #c88820 !important;
+  font-weight: 700;
+}
+
 .container {
   max-width: 560px;
   margin: 0 auto;
