@@ -8,6 +8,9 @@ export interface ExtractionResult {
   errorMessage?: string;
 }
 
+// 注意: pdf-parse/pdfjs-distはnext.config.tsのserverExternalPackagesで
+// バンドル対象から除外している。バンドルするとworkerスクリプトの相対配置が崩れ、
+// 「Setting up fake worker failed」エラーでPDF抽出が失敗する。
 async function extractPdf(buffer: Buffer): Promise<ExtractionResult> {
   const parser = new PDFParse({ data: buffer });
   try {
