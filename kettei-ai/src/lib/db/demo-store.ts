@@ -66,39 +66,43 @@ async function seedDemoProfiles(): Promise<Profile[]> {
   ];
 }
 
-// 開発・デモ用途のJSONファイルストア。Next.js dev serverは単一プロセスのため、
-// 書き込みをキューに直列化することで簡易的な排他制御を行う。
+// 開発・デモ用途のJSONファイルストア。
+//
+// 重要: Next.jsはRoute Handler(route.ts)とPage Server Component(page.tsx)を
+// 別々のモジュールグラフとしてバンドルすることがあり、その場合このクラスのインスタンスも
+// 別々に生成されうる（＝素朴なインメモリキャッシュを1個のインスタンスに持たせても
+// 他方のインスタンスからは見えない）。そのため、このクラスは呼び出しのたびに毎回
+// ディスクから読み直す設計にしており、インメモリの長期キャッシュは保持しない。
+// module-levelの書き込みキューで同一インスタンス内の書き込み直列化のみ簡易的に行う。
 // 本番運用ではSupabaseStore（未実装・要接続確認）へ切り替えること。
-class DemoStore implements DataStore {
-  private db: DbShape | null = null;
-  private writeQueue: Promise<void> = Promise.resolve();
+let writeQueue: Promise<void> = Promise.resolve();
 
+class DemoStore implements DataStore {
   private async load(): Promise<DbShape> {
-    if (this.db) return this.db;
     try {
       const raw = await fs.readFile(DB_PATH, "utf-8");
-      this.db = JSON.parse(raw) as DbShape;
+      return JSON.parse(raw) as DbShape;
     } catch {
-      this.db = emptyDb();
-      this.db.profiles = await seedDemoProfiles();
-      await this.persist();
+      const db = emptyDb();
+      db.profiles = await seedDemoProfiles();
+      await this.persist(db);
+      return db;
     }
-    return this.db;
   }
 
-  private async persist(): Promise<void> {
+  private async persist(db: DbShape): Promise<void> {
     await fs.mkdir(path.dirname(DB_PATH), { recursive: true });
-    await fs.writeFile(DB_PATH, JSON.stringify(this.db, null, 2), "utf-8");
+    await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
   }
 
   private async mutate<T>(fn: (db: DbShape) => T): Promise<T> {
-    const db = await this.load();
     let result!: T;
-    this.writeQueue = this.writeQueue.then(async () => {
+    writeQueue = writeQueue.then(async () => {
+      const db = await this.load();
       result = fn(db);
-      await this.persist();
+      await this.persist(db);
     });
-    await this.writeQueue;
+    await writeQueue;
     return result;
   }
 
