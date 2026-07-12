@@ -18,6 +18,7 @@ export interface DataStore {
   getProfileByEmail(email: string): Promise<Profile | null>;
   listProfiles(): Promise<Profile[]>;
   updateProfile(id: string, patch: Partial<Profile>): Promise<Profile>;
+  deleteProfile(id: string): Promise<void>;
 
   // projects
   createProject(input: Omit<Project, "id" | "createdAt" | "updatedAt">): Promise<Project>;

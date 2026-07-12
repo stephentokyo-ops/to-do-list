@@ -146,6 +146,12 @@ class SupabaseStore implements DataStore {
     return toProfile(data);
   }
 
+  async deleteProfile(id: string): Promise<void> {
+    // auth.users削除はSupabase Admin APIが必要。profiles行はauth.users削除時にCASCADEされる想定。
+    const { error } = await this.client.from("profiles").delete().eq("id", id);
+    if (error) throw error;
+  }
+
   async createProject(input: Omit<Project, "id" | "createdAt" | "updatedAt">): Promise<Project> {
     const { data, error } = await this.client
       .from("projects")

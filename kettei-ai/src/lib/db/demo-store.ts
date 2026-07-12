@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import bcrypt from "bcryptjs";
 import type { DataStore } from "./store";
 import type {
   Analysis,
@@ -26,6 +27,45 @@ function emptyDb(): DbShape {
   return { profiles: [], projects: [], documents: [], analyses: [], exports: [], usage: [] };
 }
 
+// 初回起動時にデモ用のシードアカウントを作成する。
+async function seedDemoProfiles(): Promise<Profile[]> {
+  const now = new Date().toISOString();
+  const adminEmail = process.env.DEMO_ADMIN_EMAIL || "admin@kettei-ai.example.com";
+  const adminPassword = process.env.DEMO_ADMIN_PASSWORD || "admin12345";
+  const userEmail = process.env.DEMO_USER_EMAIL || "demo@kettei-ai.example.com";
+  const userPassword = process.env.DEMO_USER_PASSWORD || "demo12345";
+
+  const [adminHash, userHash] = await Promise.all([
+    bcrypt.hash(adminPassword, 10),
+    bcrypt.hash(userPassword, 10),
+  ]);
+
+  return [
+    {
+      id: randomUUID(),
+      email: adminEmail,
+      passwordHash: adminHash,
+      displayName: "管理者（デモ）",
+      role: "admin",
+      plan: "professional",
+      monthlyLimit: null,
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: randomUUID(),
+      email: userEmail,
+      passwordHash: userHash,
+      displayName: "デモユーザー",
+      role: "user",
+      plan: "free",
+      monthlyLimit: null,
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+}
+
 // 開発・デモ用途のJSONファイルストア。Next.js dev serverは単一プロセスのため、
 // 書き込みをキューに直列化することで簡易的な排他制御を行う。
 // 本番運用ではSupabaseStore（未実装・要接続確認）へ切り替えること。
@@ -40,6 +80,7 @@ class DemoStore implements DataStore {
       this.db = JSON.parse(raw) as DbShape;
     } catch {
       this.db = emptyDb();
+      this.db.profiles = await seedDemoProfiles();
       await this.persist();
     }
     return this.db;
@@ -91,6 +132,18 @@ class DemoStore implements DataStore {
       if (idx === -1) throw new Error("profile not found");
       db.profiles[idx] = { ...db.profiles[idx], ...patch, updatedAt: new Date().toISOString() };
       return db.profiles[idx];
+    });
+  }
+
+  async deleteProfile(id: string): Promise<void> {
+    await this.mutate((db) => {
+      const projectIds = db.projects.filter((p) => p.userId === id).map((p) => p.id);
+      db.profiles = db.profiles.filter((p) => p.id !== id);
+      db.projects = db.projects.filter((p) => p.userId !== id);
+      db.documents = db.documents.filter((d) => !projectIds.includes(d.projectId));
+      db.analyses = db.analyses.filter((a) => a.userId !== id);
+      db.exports = db.exports.filter((e) => e.userId !== id);
+      db.usage = db.usage.filter((u) => u.userId !== id);
     });
   }
 
