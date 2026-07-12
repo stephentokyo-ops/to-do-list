@@ -11,12 +11,17 @@
 - [x] 完了
 
 ## Phase 1: 要件整理・雛形
-- [ ] 要件の過不足整理（README Assumptionsに記録）
-- [ ] Next.js プロジェクト初期化 (TS/App Router/Tailwind)
-- [ ] ディレクトリ構成設計
-- [ ] .env.example
-- [ ] Supabase migration (schema + RLS)
-- [ ] 料金設定ファイル
+- [x] 要件の過不足整理（README Assumptionsに記録予定）
+- [x] Next.js プロジェクト初期化 (Next.js 16 / TS/App Router/Tailwind v4)
+- [x] ディレクトリ構成設計 (src/lib/{ai,db,auth,files,export,config})
+- [x] .env.example
+- [x] Supabase migration (schema + RLS) supabase/migrations/0001_init.sql
+- [x] 料金設定ファイル src/lib/config/plans.ts
+- [x] AIプロバイダー抽象化(Anthropic/Demo) + Zod Schema + JSON Schema + プロンプト
+- [x] DBストア抽象化(DemoStore=JSONファイル / SupabaseStore=未検証)
+- [x] 認証(デモモードJWT Cookie、Supabase Authは未実装と明記)
+- [x] ファイル抽出(pdf-parse v2 API / mammoth / xlsx) + バリデーション + ローカルストレージ
+- [x] 出力生成(Markdown / DOCX(docxパッケージ) / PDF(Playwright+システムIPAGothicフォント))
 
 ## Phase 2: 認証・案件・アップロード
 - [ ] 認証（デモモード: ローカルJSON, 本番: Supabase Auth 抽象化）
