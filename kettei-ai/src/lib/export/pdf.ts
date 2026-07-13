@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import type { DecisionMemo } from "@/lib/ai/schema";
 
 // 日本語フォント崩れ対策: Chromiumのシステムフォント(IPAGothic)を明示指定してレンダリングする。
@@ -106,7 +107,7 @@ ${renderList(memo.risks.map((r) => `${r.text}${r.requiresExpert ? "（専門家�
 </html>`;
 }
 
-function resolveChromiumExecutablePath(): string | undefined {
+function resolveLocalDevChromiumPath(): string | undefined {
   const candidates = [
     process.env.PLAYWRIGHT_CHROMIUM_PATH,
     "/opt/pw-browsers/chromium",
@@ -118,16 +119,34 @@ function resolveChromiumExecutablePath(): string | undefined {
   return undefined;
 }
 
+// Vercel等のサーバーレス環境には日本語フォントが一切インストールされていないため、
+// リポジトリに同梱したIPAゴシック(assets/fonts/ipag.ttf, IPAフォントライセンスv1.0)を
+// 実行時に/tmp/fontsへ配置し、@sparticuz/chromium同梱のfontconfigに認識させる。
+async function ensureServerlessJapaneseFont(): Promise<void> {
+  const fontDir = "/tmp/fonts";
+  const fontDest = path.join(fontDir, "ipag.ttf");
+  if (fs.existsSync(fontDest)) return;
+  await fs.promises.mkdir(fontDir, { recursive: true });
+  const fontSrc = path.join(process.cwd(), "assets", "fonts", "ipag.ttf");
+  await fs.promises.copyFile(fontSrc, fontDest);
+}
+
+async function resolveLaunchOptions(): Promise<{ executablePath: string; args?: string[] }> {
+  const localPath = resolveLocalDevChromiumPath();
+  if (localPath) return { executablePath: localPath };
+
+  // ローカル開発用Chromiumが見つからない場合は、サーバーレス対応バイナリにフォールバックする。
+  await ensureServerlessJapaneseFont();
+  const { default: chromium } = await import("@sparticuz/chromium");
+  const executablePath = await chromium.executablePath();
+  return { executablePath, args: chromium.args };
+}
+
 export async function memoToPdfBuffer(memo: DecisionMemo, watermark: boolean): Promise<Buffer> {
   const { chromium } = await import("playwright-core");
-  const executablePath = resolveChromiumExecutablePath();
-  if (!executablePath) {
-    throw new Error(
-      "PDF生成用のChromiumが見つかりません。PLAYWRIGHT_CHROMIUM_PATH環境変数でパスを指定してください。",
-    );
-  }
+  const launchOptions = await resolveLaunchOptions();
 
-  const browser = await chromium.launch({ executablePath });
+  const browser = await chromium.launch(launchOptions);
   try {
     const page = await browser.newPage();
     await page.setContent(memoToHtml(memo, watermark), { waitUntil: "networkidle" });
