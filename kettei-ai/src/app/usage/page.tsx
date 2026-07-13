@@ -2,13 +2,20 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getStore } from "@/lib/db";
 import { getPlan, PLANS } from "@/lib/config/plans";
+import { isBillingConfigured } from "@/lib/billing/stripe";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UpgradeButton } from "@/components/billing/upgrade-button";
 import { formatDateTimeJst, formatJpy } from "@/lib/utils";
 
-export default async function UsagePage() {
+export default async function UsagePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ checkout?: string }>;
+}) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  const { checkout } = await searchParams;
   const store = getStore();
   const plan = getPlan(user.plan);
   const yearMonth = new Date().toISOString().slice(0, 7);
@@ -23,6 +30,17 @@ export default async function UsagePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 space-y-6">
       <h1 className="text-2xl font-bold text-slate-900">使用量・プラン</h1>
+
+      {checkout === "success" && (
+        <div className="rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+          お支払いが完了しました。プランの反映まで少し時間がかかる場合があります。
+        </div>
+      )}
+      {checkout === "cancel" && (
+        <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+          決済がキャンセルされました。
+        </div>
+      )}
 
       <Card>
         <CardHeader>
@@ -69,6 +87,7 @@ export default async function UsagePage() {
                 <th className="py-1">月額</th>
                 <th className="py-1">月間件数</th>
                 <th className="py-1">文字数上限</th>
+                {isBillingConfigured() && <th className="py-1"></th>}
               </tr>
             </thead>
             <tbody>
@@ -78,10 +97,22 @@ export default async function UsagePage() {
                   <td className="py-1">{p.monthlyPriceJpy === 0 ? "無料" : formatJpy(p.monthlyPriceJpy ?? 0)}</td>
                   <td className="py-1">{p.monthlyProjectLimit}件</td>
                   <td className="py-1">{p.maxCharsPerProject.toLocaleString()}文字</td>
+                  {isBillingConfigured() && (
+                    <td className="py-1">
+                      {(p.id === "standard" || p.id === "professional") && p.id !== plan.id && (
+                        <UpgradeButton plan={p.id} label={`${p.name}にする`} />
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
+          {!isBillingConfigured() && (
+            <p className="mt-3 text-xs text-slate-400">
+              決済機能は現在準備中です（STRIPE_SECRET_KEY未設定）。有料プランへの変更は管理者にお問い合わせください。
+            </p>
+          )}
         </CardContent>
       </Card>
 

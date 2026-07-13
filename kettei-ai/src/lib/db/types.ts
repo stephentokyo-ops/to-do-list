@@ -6,11 +6,13 @@ export type UserRole = "user" | "admin";
 export interface Profile {
   id: string;
   email: string;
-  passwordHash: string;
+  passwordHash: string; // Supabase Auth利用時は空文字（パスワードはSupabase側で管理）
   displayName: string;
   role: UserRole;
   plan: PlanId;
   monthlyLimit: number | null; // null = プラン既定値を使用
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
   createdAt: string;
   updatedAt: string;
 }

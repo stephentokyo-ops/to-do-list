@@ -7,7 +7,9 @@
 ## 実装済みのセキュリティ対策
 
 - **通信**: 本番運用はHTTPS前提（Vercel等でのデプロイ時にTLS終端）。
-- **APIキーの非露出**: `ANTHROPIC_API_KEY`、`SUPABASE_SERVICE_ROLE_KEY`はサーバー側（Route Handler）でのみ参照し、クライアントバンドルに含めていません。
+- **APIキーの非露出**: `ANTHROPIC_API_KEY`、`SUPABASE_SERVICE_ROLE_KEY`、`STRIPE_SECRET_KEY`はサーバー側（Route Handler）でのみ参照し、クライアントバンドルに含めていません。
+- **Stripe Webhookの署名検証**: `/api/billing/webhook`はraw bodyに対して`stripe.webhooks.constructEvent`で署名検証を行い、検証に失敗したリクエストは処理しません。
+- **退会時のSupabase Auth連携**: Supabaseモードでの退会は`auth.admin.deleteUser`（service_role権限）で`auth.users`ごと削除し、`profiles`等の関連データは外部キーのカスケード削除で連動して消去されます。
 - **セッションCookie**: `httpOnly`, `sameSite=lax`, 本番環境（`NODE_ENV=production`）では`secure`属性を付与。
 - **パスワードハッシュ**: bcrypt（コスト係数10）でハッシュ化して保存。平文保存なし。
 - **アップロードファイルの検証**: 拡張子・MIMEタイプ・サイズ（既定20MB）を検証（`src/lib/files/validate.ts`）。危険なファイル名（パストラバーサル・制御文字）は正規化。
@@ -19,7 +21,7 @@
 
 ## 既知の制約・今後の対応事項
 
-- **Supabase Auth未接続**: 現状デモモード（自前JWT認証）のみで検証済み。本番投入前にSupabase Auth連携の実装・セキュリティレビューが必要です。
+- **Supabase Auth/Storage・Stripeは実機未検証**: コードは実装済みですが、実際の外部アカウントに接続した動作確認・セキュリティレビューは行っていません。本番投入前にステージング環境での検証が必要です。
 - **監査ログ**: 高度な監査ログ（誰がいつ何を参照したか等）は未実装です。
 - **AI入出力の保存制御**: AI入出力の保存有無を利用者が選択できる設定は未実装です（拡張しやすい構造にはなっています）。
 - **レート制限**: API呼び出しに対するレート制限・ブルートフォース対策は未実装です。本番投入前にログイン試行回数制限等の追加を推奨します。

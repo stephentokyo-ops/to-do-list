@@ -23,6 +23,8 @@ function toProfile(row: Record<string, unknown>): Profile {
     role: row.role as Profile["role"],
     plan: row.plan as Profile["plan"],
     monthlyLimit: (row.monthly_limit as number | null) ?? null,
+    stripeCustomerId: (row.stripe_customer_id as string | null) ?? null,
+    stripeSubscriptionId: (row.stripe_subscription_id as string | null) ?? null,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
   };
@@ -100,6 +102,8 @@ class SupabaseStore implements DataStore {
         role: input.role,
         plan: input.plan,
         monthly_limit: input.monthlyLimit,
+        stripe_customer_id: input.stripeCustomerId,
+        stripe_subscription_id: input.stripeSubscriptionId,
       })
       .select()
       .single();
@@ -137,6 +141,8 @@ class SupabaseStore implements DataStore {
         role: patch.role,
         plan: patch.plan,
         monthly_limit: patch.monthlyLimit,
+        stripe_customer_id: patch.stripeCustomerId,
+        stripe_subscription_id: patch.stripeSubscriptionId,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
@@ -147,8 +153,9 @@ class SupabaseStore implements DataStore {
   }
 
   async deleteProfile(id: string): Promise<void> {
-    // auth.users削除はSupabase Admin APIが必要。profiles行はauth.users削除時にCASCADEされる想定。
-    const { error } = await this.client.from("profiles").delete().eq("id", id);
+    // auth.usersをAdmin APIで削除する。profilesは外部キーのON DELETE CASCADEで連動削除される
+    // (supabase/migrations/0001_init.sql参照)。service_role_keyで生成したクライアントのみ実行可能。
+    const { error } = await this.client.auth.admin.deleteUser(id);
     if (error) throw error;
   }
 

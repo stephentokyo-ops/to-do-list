@@ -28,3 +28,18 @@
 
 - デモ用JSONストアがNext.jsのモジュールバンドル境界をまたいでキャッシュ不整合を起こし、案件作成直後に404となる不具合を修正（常にディスクから読み直す設計に変更）
 - pdf-parse(pdfjs-dist)がNext.jsサーバーバンドルに含まれるとworkerスクリプトの解決に失敗しPDF抽出が常に失敗する不具合を修正（`serverExternalPackages`設定で対応）
+
+## [0.2.0] - 本番連携の実装（Supabase / Stripe / サーバーレスPDF）
+
+### 追加
+
+- Supabase Auth連携（`@supabase/ssr`）: 新規登録・ログイン・ログアウト・現在ユーザー取得をSupabase Auth経由で実行するモードを追加（デモモードと自動切り替え）
+- Supabase Storage連携: ファイルアップロード・出力ファイル保存をSupabase Storageバケットへ保存するモードを追加（`supabase/migrations/0002_storage_buckets.sql`）
+- 退会処理をSupabase Auth Admin API（`auth.admin.deleteUser`）に対応し、関連データをカスケード削除
+- サーバーレス対応PDF生成: ローカル開発用Chromiumが見つからない場合、`@sparticuz/chromium`と同梱の日本語フォント（IPAゴシック、`assets/fonts/`）に自動フォールバック。実際にサーバーレスバイナリでの日本語描画を確認済み
+- Stripe決済連携: `/api/billing/checkout`（Checkout Session作成）、`/api/billing/webhook`（署名検証・プラン反映）、使用量・プラン画面へのアップグレードボタンを追加。`STRIPE_SECRET_KEY`未設定時は自動的に非表示になり既存のデモ体験に影響しない
+- Profileに`stripeCustomerId`・`stripeSubscriptionId`を追加
+
+### 注記
+
+- Supabase Auth/Storage・Stripeはいずれも実際の外部アカウントに接続できない開発環境で実装したため、公式ドキュメントの仕様に基づくコードであり実機動作検証は未実施。本番投入前にステージング環境での検証が必須（README/SECURITY.md参照）。
