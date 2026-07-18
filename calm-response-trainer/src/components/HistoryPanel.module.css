@@ -1,0 +1,86 @@
+.wrapper {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statValue {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2c7a4b;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.empty {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.item {
+  padding: 0.5rem 0;
+  border-top: 1px solid #eee;
+}
+
+.item:first-child {
+  border-top: none;
+}
+
+.itemLine {
+  font-size: 0.85rem;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.itemMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #999;
+}
+
+.badge {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge.calm {
+  background: #eafaf0;
+  color: #2c7a4b;
+}
+
+.badge.okay {
+  background: #fdf3e0;
+  color: #b9820f;
+}
+
+.badge.reactive {
+  background: #fdecea;
+  color: #c0392b;
+}
